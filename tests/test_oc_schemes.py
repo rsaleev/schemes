@@ -1,4 +1,3 @@
-from oc_schemes import __version__
 
 
 def test_version():
