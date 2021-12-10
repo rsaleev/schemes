@@ -1,11 +1,9 @@
-from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
+from fastapi import FastAPI
+from .routes import schemes, validation
 
-from .routes import schemes
+app = FastAPI(debug=True)
+
+app.include_router(schemes.router)
+app.include_router(validation.router)
 
 
-app = Starlette()
-
-app.add_route('/schemes', schemes.get_schemes)
-app.add_route('/scheme/{name}', schemes.get_schema)
