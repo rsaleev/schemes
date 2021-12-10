@@ -1,8 +1,10 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict
 
 from enum import Enum
 
 from pydantic import BaseModel, root_validator
+
+from fastapi import status
 
 from src.core.schemes import Workbook
 
@@ -14,7 +16,7 @@ class SchemeSource(str, Enum):
 
 class SchemeRequest(BaseModel):
 
-    name:Optional[str]
+    name:str
     index:Optional[int]
     regex:Optional[str]
     optional:Optional[bool]    
@@ -26,5 +28,5 @@ class SchemeRequest(BaseModel):
         return values
 
 class SchemeResponse(BaseModel):
-    data:Optional[List[Workbook]]
-
+    data:Optional[Union[Workbook, List[Workbook], Dict[str, str]]]
+    error:Optional[str]
