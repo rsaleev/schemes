@@ -147,3 +147,10 @@ cython_debug/
 .vscode
 __pycache__
 poetry.*
+
+*docker*
+poetry*
+poetry.lock
+build/
+config/
+logs/
