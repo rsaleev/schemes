@@ -1,15 +1,13 @@
-import os
-
-from typing import List, Optional, Union, Tuple, Dict
+from typing import List, Optional, Union, Dict
 
 import re
 
 from collections import Counter
 
 from pydantic import BaseModel, root_validator
-from pydantic.error_wrappers import ValidationError
 
-from src.core.loader import SchemaLoader
+from src.core.handler import SchemeHandler
+
 
 
 class Attribute(BaseModel):
@@ -85,27 +83,42 @@ class Header(BaseModel):
             for k, v in value.items():
                 result.__setattr__(k, v)
 
-    def _delete_column(self, value: dict) -> None:
+    def _delete_column(self, name:str) -> None:
+        """_delete_column 
+
+        Удаление столбца из массива по параметру column.name
+
+        Args:
+            name (str): имя объекта
+
+        Raises:
+            ValueError: возвращается если объект не найден
+        """
 
         try:
             result: Column = next(
-                c for c in self.columns if c.name == value['name'])
-        except:
+                c for c in self.columns if c.name == name)
+        except StopIteration:
             raise ValueError
         else:
             self.columns.remove(result)
 
+    def _delete_attribute(self,name:str) -> None:
+        if self.attributes:
+            try:
+                result:Attribute = next(a for a in self.attributes if a.name == name)
+            except StopIteration:
+                raise ValueError
+            else:
+                self.attributes.remove(result)
+
     def _add_column(self, value: dict):
         self.columns.append(Column(**value))
-
-    def _delete_attribute(self, value: dict) -> None:
-        pass
 
     def _add_attribute(self, value: dict) -> None:
         if not self.attributes:
             raise AttributeError("Отсутствуют атрибуы заголовка")
         self.attributes.append(Attribute(**value))
-
 
 class Workbook(BaseModel):
     """ 
@@ -166,7 +179,13 @@ class Workbook(BaseModel):
         else:
             return self.dict()
 
-    def delete_column(self, )
+    def delete_column(self, column_name:str)->Dict[str, str]:
+        self.header._delete_column(column_name)
+        return self.dict()
+
+    def delete_attribute(self, attribute_name:str):
+        self.header._delete_attribute(attribute_name)
+        return self.dict()
 
     def verify_columns(self, source: tuple):
         schema = None
@@ -185,7 +204,7 @@ class Workbook(BaseModel):
         # если количество совпадений соответствует кол-ву аргументов, то считать, что схема найдена
         # в ином случае полагать что, схема документа не описана
         if len(matched) == len(source):
-            schema = self.name
+            schema = self
         return (schema, matched, unmatched)
 
     def validate_columns(self, schema: Union[str, None], matched: list, unmatched: list):
@@ -200,17 +219,21 @@ class Workbook(BaseModel):
                     f'Отсутствуют обязательные столбцы {";".join(unmatched)}')
         else:
             raise ValueError('Схема документа не найдена')
-        return {'schema': schema, 'matched': matched, 'required': unmatched}
+        return {'schema': schema, 'columns':[m.dict() for m in matched]}
 
 
-class WorkbookSchemes(SchemaLoader):
+class WorkbookSchemes(SchemeHandler):
+
+    SOURCE = 'documents'
 
     @classmethod
-    def load(cls):
-        path = f'{os.environ["SCHEMES_PATH"]}/documents'
-        schemes = []
-        for file in os.listdir(path):
-            _, tail = os.path.splitext(file)
-            if tail == '.json':
-                schemes.append(Workbook(**super().load(f'{path}/{file}')))
-        return schemes
+    def read(cls):       
+        return [Workbook(**data) for data in super().load()]
+    
+    @classmethod
+    def update(cls, scheme: str, data: dict) -> None:
+        return super().dump(scheme, data, ensure_exists=True)
+
+    @classmethod
+    def write(cls, scheme: str, data: dict)->None:
+        return super().dump(scheme, data, ensure_exists=False)
