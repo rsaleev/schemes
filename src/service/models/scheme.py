@@ -2,31 +2,41 @@ from typing import Optional, List, Union, Dict
 
 from enum import Enum
 
-from pydantic import BaseModel, root_validator
-
-from fastapi import status
+from pydantic import BaseModel
 
 from src.core.schemes import Workbook
 
 
 
-class SchemeSource(str, Enum):
+class SchemeDataType(str, Enum):
+    """SchemeDataType 
+
+    Описание структуры документа или модели в БД
+   
+    """
     documents = "documents"
     database = "database"
 
-class SchemeRequest(BaseModel):
+class SchemeHeaderElement(str, Enum):
+    """SchemeHeaderElement
+    Описание элементов в заголовке структуру документа или модели в БД
+
+    """
+    column  = "column"
+    attribute = "attribute"
+
+class SchemeColumnRequest(BaseModel):
 
     name:str
     index:Optional[int]
     regex:Optional[str]
-    optional:Optional[bool]    
-        
-    @root_validator(pre=True)
-    def validate_id_passed(cls, values):
-        if not values.get('name', None) and not values.get('index', None) in values:
-            raise ValueError("Должно быть указано одно из полей index или name")
-        return values
-
+    optional:Optional[bool]  
+    
 class SchemeResponse(BaseModel):
-    data:Optional[Union[Workbook, List[Workbook], Dict[str, str]]]
+    data:Optional[Union[Workbook, List[Workbook]]]
+    error:Optional[str]
+
+
+class ValidationResponse(BaseModel):
+    data:Optional[Dict]
     error:Optional[str]
