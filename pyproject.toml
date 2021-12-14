@@ -7,16 +7,15 @@ authors = ["rsaleev <rs.aleev@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 cachetools = "^4.2.4"
-toml = "^0.10.2"
-datamodel-code-generator = "^0.11.15"
 PyYAML = "^6.0"
 aiofiles = "^0.8.0"
 fastapi = "^0.70.0"
 python-dateutil = "^2.8.2"
-aiofile = "^3.7.2"
+uvicorn = "^0.16.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+uvicorn = "^0.16.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -149,6 +149,7 @@ __pycache__
 poetry.*
 
 *docker*
+Dockerfile
 poetry*
 poetry.lock
 build/
