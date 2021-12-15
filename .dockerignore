@@ -1,0 +1,11 @@
+.vscode/
+__pycache__/
+__pycache__
+tests/
+.venv/
+.git/
+pyproject.toml
+poetry.lock
+README.rst
+.gitignore
+logs/
