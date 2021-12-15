@@ -38,7 +38,7 @@ class SchemeHandler(type):
         for filename in os.listdir(pathname):
             _, tail = os.path.splitext(filename)
             if tail == '.json':
-                with open(f'{pathname}/{filename}', 'r') as f:
+                with open(f'{pathname}/{filename}', 'r', encoding='utf8') as f:
                     schemes.append(json.loads(f.read(-1)))
         return schemes
         
@@ -63,7 +63,7 @@ class SchemeHandler(type):
         if ensure_exists:
             if not os.path.isfile(filename):
                 raise FileNotFoundError
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='utf8') as f:
             f.write(json.dumps(data, ensure_ascii=False, indent=4, sort_keys=True))
 
     @classmethod
