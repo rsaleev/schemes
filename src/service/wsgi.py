@@ -11,7 +11,7 @@ from .routes import schemes, validation
 
 
 
-app = FastAPI(debug=bool(os.environ['FASTAPI_DEBUG']))
+app = FastAPI(debug=bool(os.environ['FASTAPI_DEBUG']), docs_url='/documentation', version='0.1.1')
 
 app.include_router(schemes.router)
 app.include_router(validation.router)
