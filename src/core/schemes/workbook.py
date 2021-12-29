@@ -190,36 +190,35 @@ class Workbook(BaseModel):
     def verify_columns(self, source: tuple):
         schema = None
         matched = []
-        unmatched = []
         for idx, value in enumerate(source, start=1):
             # поиск по совпадению регулярного значения и исходного заголовка. Возвращает None если не найдено значение
-            match = next(
-                (c for c in self.header.columns if re.match(c.regex, value)), None)
-            # при найденном значении меняет индекс положения по оси X
+            match = next((c for c in self.header.columns if re.match(c.regex, fr"{value}")),None)
             if match:
                 match.index = idx
                 matched.append(match)
-        unmatched.extend([c.name for c in self.header.columns if not c.name in [
-                         m.name for m in matched] and not c.optional])
+
+        missing_required = [c.name for c in self.header.columns if not c in matched and not c.optional]
+        missing_optional = [c.name for c in self.header.columns if not c in matched and c.optional]
         # если количество совпадений соответствует кол-ву аргументов, то считать, что схема найдена
         # в ином случае полагать что, схема документа не описана
         if len(matched) == len(source):
             schema = self
-        return (schema, matched, unmatched)
+        return schema, matched, missing_required, missing_optional
 
-    def validate_columns(self, schema: Union[str, None], matched: list, unmatched: list):
+    def validate_columns(self, schema: Union[str, None], matched: list, missing_required: list, missing_optional:list):
         if schema:
             duplicates = [item for item, count in Counter(
                 [m.name for m in matched]).items() if count > 1]
             if duplicates:
                 raise ValueError(
                     'Дублирование столбцов, документ не отвечает требованиям схемы')
-            if unmatched:
-                raise ValueError(
-                    f'Отсутствуют обязательные столбцы {";".join(unmatched)}')
+            # if unmatched:
+            #     raise ValueError(
+            #         f'Отсутствуют обязательные столбцы {";".join(unmatched)}')
         else:
             raise ValueError('Схема документа не найдена')
-        return {'schema': schema, 'columns':[m.dict() for m in matched]}
+        output = {'schema': schema, 'columns':[m.dict() for m in matched], 'missing':{'required':missing_required, 'optional':missing_optional}}
+        return output
 
 
 class WorkbookSchemes(SchemeHandler):
