@@ -10,8 +10,7 @@ from src.core.schemes import WorkbookSchemes, Column, Workbook
 
 from src.core import exceptions
 
-router = APIRouter(prefix='/validate', tags=['validation'])
-
+router = APIRouter(prefix='/validation', tags=['validation'])
 
 async def validate_document_schema(headers: list):
     schemes = WorkbookSchemes.read()
@@ -22,9 +21,6 @@ async def validate_document_schema(headers: list):
         if r[0]:
             return r[0].validate_columns(r[0].name, r[1], r[2], r[3])
     raise exceptions.SchemeNotFound("Схема не найдена")
-
-
-
 
 @router.get('/{source}', status_code=status.HTTP_200_OK, response_model=scheme.ValidationResponse, response_model_exclude_unset=True)
 async def validate_schema(source: scheme.SchemeDataType, headers: List[str] = Query(...)):
