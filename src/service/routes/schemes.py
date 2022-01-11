@@ -11,6 +11,7 @@ from src.core.schemes import WorkbookSchemes
 router = APIRouter(prefix='/schemes',tags=['schemes'])
 
 
+
 @router.get('/', response_model=List[Workbook], response_model_exclude_unset=True, 
             description='Получить все известные схемы', status_code=status.HTTP_200_OK)
 async def fetch_all():
