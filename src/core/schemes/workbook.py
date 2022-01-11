@@ -10,6 +10,7 @@ from src.core.handler import SchemeHandler
 
 
 
+
 class Attribute(BaseModel):
     """ 
     Атрибут, включающий в себя указание на конкретную позицию Y-index в столбцах
@@ -18,6 +19,11 @@ class Attribute(BaseModel):
     name: str
     index: int
     optional: bool
+    
+
+class Format(BaseModel):
+    formatter:str
+    options:List[str]
 
 
 class Column(BaseModel):
@@ -25,9 +31,14 @@ class Column(BaseModel):
     Столбец с указанием признаков для текстового поиска и создания объектов из найденных результатов
     """
     name: str
+    model:str
+    model_attribute:str
     regex: str
     optional: bool
-    index: Optional[int]
+    index: int
+    output:List[str]
+    format:Union[List[Format], None]
+    mapping:str 
 
 
 class Header(BaseModel):
