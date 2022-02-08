@@ -1,9 +1,9 @@
 services:
   schemes:
-    restart: on-abnormal
+    restart: unless-stopped
     build:
       context: .. 
-      dockerfile: ./docker/      
+      dockerfile: ./docker/app/Dockerfile      
     volumes:
       - appdata:/var/www/schemes:rw
     container_name: 'schemes_web'

@@ -21,10 +21,10 @@ RUN mkdir -p /var/www/schemes
 WORKDIR /var/www/schemes
 # copy code and other necessary folder to destination
 ADD ./src ./src
-ADD ./schemes ./schemes
+ADD ./data ./data
 # copy configuration
-ADD ./config/requirements.txt /var/www/schemes/
-ADD ./config/config.json /docker-entrypoint.d
+ADD ./docker/app/requirements.txt /var/www/schemes/
+ADD ./docker/app/config.json /docker-entrypoint.d
 # install python3 requirements
 RUN pip3 install -r requirements.txt && rm requirements.txt
 # change ownership for isapt-transport-httpsolation
