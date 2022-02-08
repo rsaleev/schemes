@@ -1,0 +1,20 @@
+{
+    "listeners": {
+        "*:80": {
+            "pass": "applications/schemes"
+        }
+    },
+
+    "applications": {
+        "schemes": {
+            "type": "python",
+            "processes":3,
+            "working_directory":"/var/www/schemes",
+            "path": "/var/www/schemes",
+            "module": "src.service.wsgi",
+            "callable":"app",
+            "user": "unit",
+            "group": "unit"
+        }
+    }
+}

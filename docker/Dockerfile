@@ -29,10 +29,6 @@ ENV SCHEMES_PATH=/var/www/schemes/schemes
 ENV FASTAPI_DEBUG=0
 # install python3 requirements
 RUN pip3 install -r requirements.txt && rm requirements.txt
-# create persistent volume
-VOLUME ["/var/www", "/var/log/nginx", "/etc/nginx"]
-# expose 80 port
-EXPOSE 80
 # change ownership for isapt-transport-httpsolation
 RUN chown -R unit:unit /var/www/schemes
 
