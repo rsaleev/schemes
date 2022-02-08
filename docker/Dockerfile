@@ -25,8 +25,6 @@ ADD schemes ./schemes
 # copy configuration
 ADD ./config/requirements.txt /var/www/schemes/
 ADD ./config/config.json /docker-entrypoint.d
-ENV SCHEMES_PATH=/var/www/schemes/schemes
-ENV FASTAPI_DEBUG=0
 # install python3 requirements
 RUN pip3 install -r requirements.txt && rm requirements.txt
 # change ownership for isapt-transport-httpsolation

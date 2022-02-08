@@ -1,15 +1,21 @@
 services:
   schemes:
-    restart: always
-    env_file: ./config/.env
+    restart: on-abnormal
+    env_file: ./docker/.env
     build: .      
-    expose:
-      - "80"
     volumes:
       - appdata:/var/www/schemes:rw
     container_name: 'schemes_fastapi'
+    environment:
+      - SCHEMES_PATH=/var/www/schemes/data
+    networks:
+      - schemes
 
 volumes:
   appdata: {}
+
+networks:
+  schemes:
+    driver: bridge
   
 
