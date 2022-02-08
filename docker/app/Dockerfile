@@ -20,8 +20,8 @@ RUN mkdir -p /var/www/schemes
 # setup working directory
 WORKDIR /var/www/schemes
 # copy code and other necessary folder to destination
-ADD src ./src
-ADD schemes ./schemes
+ADD ./src ./src
+ADD ./schemes ./schemes
 # copy configuration
 ADD ./config/requirements.txt /var/www/schemes/
 ADD ./config/config.json /docker-entrypoint.d

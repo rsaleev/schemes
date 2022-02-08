@@ -1,11 +1,12 @@
 services:
   schemes:
     restart: on-abnormal
-    env_file: ./docker/.env
-    build: .      
+    build:
+      context: .. 
+      dockerfile: ./docker/      
     volumes:
       - appdata:/var/www/schemes:rw
-    container_name: 'schemes_fastapi'
+    container_name: 'schemes_web'
     environment:
       - SCHEMES_PATH=/var/www/schemes/data
     networks:
