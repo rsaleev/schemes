@@ -3,10 +3,10 @@ from typing import Union, Optional, Union, List
 from fastapi.routing import APIRouter
 from fastapi import HTTPException, status
 
-from src.core.schemes.workbook import Attribute, Column, Workbook
+from src.api.schemes.workbook import Attribute, Column, Workbook
 
-from src.service.models import scheme
-from src.core.schemes import WorkbookSchemes
+from src.service.schemas import scheme
+from src.api.schemes import WorkbookSchemes
 
 router = APIRouter(prefix='/schemes',tags=['schemes'])
 
@@ -73,7 +73,7 @@ async def fetch_scheme(source: scheme.SchemeDataType, schema_name: str):
             status_code=status.HTTP_501_NOT_IMPLEMENTED, detail='Не реализовано')
 
 
-@router.post('/{source}/{schema_name}', description='Обновить элемент в схеме документа по названию', status_code=200)
+@router.put('/{source}/{schema_name}', description='Обновить элемент в схеме документа по названию', status_code=200)
 async def modify_scheme_element(source: scheme.SchemeDataType, schema_name: str, scheme_request: scheme.SchemeColumnRequest):
     """modify_scheme 
 
@@ -102,10 +102,11 @@ async def modify_scheme_element(source: scheme.SchemeDataType, schema_name: str,
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Схема не найдена')
     else:
-        data = scheme_match.update_column(
-            scheme_request.dict(exclude_unset=True))
-        WorkbookSchemes.update(scheme_match.name, data)
+        data = scheme_match.update_column(scheme_request.name, 
+            scheme_request.dict(exclude_unset=True,exclude={'name'}))
+        WorkbookSchemes.update(scheme_match.name, data.dict())
         return scheme_match
+        
 
 
 @router.delete('/{source}/{schema_name}/{element_type}/{element_name}', description='Удалить элемент в схеме документа по названию', status_code=200)
@@ -147,11 +148,11 @@ def delete_scheme_element(source: scheme.SchemeDataType, element_type: scheme.Sc
                 data = scheme_match.delete_column(element_name)
             except (AttributeError, ValueError):
                 pass
-        if element_type == scheme.SchemeHeaderElement.attribute:
-            try:
-                data = scheme_match.delete_attribute(element_name)
-            except (AttributeError, ValueError):
-                pass
+        # if element_type == scheme.SchemeHeaderElement.attribute:
+        #     try:
+        #         data = scheme_match.delete_attribute(element_name)
+        #     except (AttributeError, ValueError):
+        #         pass
         if not data:
             raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND, detail='Схема не найдена')
@@ -159,7 +160,7 @@ def delete_scheme_element(source: scheme.SchemeDataType, element_type: scheme.Sc
             WorkbookSchemes.write(scheme_match.name, data)
         return
 
-@router.put('/{source}/{scheme_name}', description='Добавить элемент в схеме документа по названию', status_code=201)
+@router.post('/{source}/{scheme_name}', description='Добавить элемент в схеме документа по названию', status_code=201)
 def add_new_scheme(source:scheme.SchemeDataType, scheme_name:str, data:Workbook):
     if source == scheme.SchemeDataType.documents:
         try:

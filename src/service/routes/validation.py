@@ -4,11 +4,11 @@ from typing import Tuple, List, Union
 from fastapi.routing import APIRouter
 from fastapi import Query, HTTPException, status
 
-from src.service.models import scheme
+from src.service.schemas import scheme
 
-from src.core.schemes import WorkbookSchemes, Column, Workbook
+from src.api.schemes import WorkbookSchemes, Column, Workbook
 
-from src.core import exceptions
+from src.api import exceptions
 
 router = APIRouter(prefix='/validation', tags=['validation'])
 
