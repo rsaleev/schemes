@@ -4,7 +4,7 @@ import unittest
 
 import json
 
-from src.core.loader import SchemaLoader
+from src.api.loader import SchemaLoader
 
 
 class TestSchemeLoader(unittest.TestCase):
