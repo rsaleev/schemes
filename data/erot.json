@@ -1,0 +1,1144 @@
+{
+  "title":"Единый реестр обязательных требований",
+  "name": "erot",
+  "sheet": "Реестр обязательных требований",
+  "header": [
+      {
+        "name": "Дата и время формирования отчета",
+        "optional": false
+      },
+      {
+        "name": "Орган, проверяющий соответствие  обязательному требованию",
+        "optional": false
+      }
+  ],
+  "columns": [
+    {
+      "name": "№ п/п",
+      "document": {
+        "regex": "(?i)^№\\s*п\\S+п$",
+        "optional": false,
+        "format": null
+      },
+      "mapping":null,
+      "database":null
+    },
+    {
+      "name": "ID требования",
+      "document":{
+        "regex": "(?i)^id\\sтребовани[а-я]+$",
+        "optional": false,
+        "format": null
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Base",
+        "attribute":"req_id"
+      }
+    },
+    {
+      "name": "Содержание обязательного требования",
+      "document":{
+        "regex": "(?i)^содержан[а-я]+\\s+обязательн[a-я]+\\s+требовани[а-я]+",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Base",
+        "attribute":"req_content"
+      }
+    },
+    {
+      "name": "Статус публикации",
+      "document":{
+        "regex": "(?i)^стату[а-я]+\\s+публикац[а-я]+",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "input":"value",
+          "path":"/references/publish/title",
+          "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_publication_status"
+      }
+    },
+    {
+      "name": "Дата публикации",
+      "document":{
+        "regex": "(?i)^дат[а-я]+\\s+публикац[а-я]+",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          },
+          {
+            "formatter": "DateInput",
+            "options": [
+              "(?P<date_fmt>\\d{2,4}.\\d{2,4}.\\d{2,4})|(?P<str_fmt>[А-я]+...+)"
+            ]
+          }
+        ]
+      },
+      "mapping":null,
+      "database": {
+        "orm":"Base",
+        "attribute":"desc_publication_date"
+      }
+    },
+    {
+      "name": "Статус работы с требованием",
+      "document":{
+        "regex": "(?i)^стату[а-я]+\\s*работ[а-я]+\\s*с\\s*требовани[а-я]+",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping": {
+          "input":"value",
+          "link":"/references/working/title",
+          "output":"id"
+      },
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_work_status"
+      }
+    },
+    {
+      "name": "Уровень регулирования",
+      "document":{
+        "regex": "(?i)^уров[а-я]+\\s+регулирован[а-я]+",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "attribute":"value",
+          "source":"/references/requirement/regulation/level",
+          "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_regulation_level"
+      }
+    }, 
+    {
+      "name": "Реквизиты структурной единицы акта, содержащего обязательное требование",
+      "document":{
+        "regex": "(?i)^(реквизит[а-я]+\\s*структурн[а-я]+\\s*единицы\\sакт[а-я])(...+)",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          },
+          {
+            "formatter": "TextSplit",
+            "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_act_requisites"
+      }
+    },
+    {
+      "name": "Текст структурной единицы акта, содержащей обязательное требование",
+      "document":{
+        "regex": "(?i)^текст[а-я]*\\s*структурн[а-я]+\\s*единицы\\s+акт[а-я]+\\S+\\s+содержащей\\s+...+$",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_act_text"
+      }
+    },
+    {
+      "name": "Срок действия обязательного требования",
+      "document":{
+        "regex": "(?i)^срок[а-я]*\\s*действия\\s*обязательн[а-я]+\\sтребован[а-я]+$",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          },
+          {
+            "formatter": "DateInput",
+            "options": [
+              "(?P<date_fmt>\\d{2,4}.\\d{2,4}.\\d{2,4})|(?P<str_fmt>[А-я]+...+)"
+            ]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_valid_to"
+      }
+    },
+    {
+      "name": "Статус обязательного требования",
+      "document":{
+        "regex": "(?i)^стату[а-я]?\\s*обязательн[a-я]+\\sтребован[а-я]+",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "input":"value",
+          "link":"/references/validity/title",
+          "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Base",
+        "attribute":"desc_validity_status"
+      }
+    },
+    {
+      "name": "Объект, к которому предъявляются обязательные требования",
+      "document":{
+        "regex": "(?i)^объект\\S*\\s*к\\s*котор[а-я]+\\s*предъявляют[а-я]*\\s*обязательн[а-я]+\\s*требован[а-я]+",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Control",
+        "attribute":"ctrl_objects"
+      }
+    },
+    {
+      "name": "Категории лиц, обязанных соблюдать обязательное требование",
+      "document":{
+        "regex": "(?i)^категори[а-я]+\\s?лиц[а-я]?...+",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          },
+          {
+            "formatter": "TextSplit",
+            "options": [";"]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "input":"value",
+          "link":"/references/subjects/title",
+          "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Control",
+        "attribute":"ctrl_subjects_categories"
+      }
+    },
+    {
+      "name": "Иные категории лиц, обязанных соблюдать обязательное требование",
+      "document":{
+        "regex": "(?i)^ины[а-я]?\\W?категори[а-я]+\\s?лиц[а-я]?...+",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          },
+          {
+            "formatter": "TextSplit",
+            "options": [";"]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "input":"value",
+          "link":"/references/subjects/title",
+          "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Control",
+        "attribute":"ctrl_subjects_categories_ext"
+      }
+    },
+    {
+      "name": "Форма оценки соблюдения обязательного требования",
+      "document":{
+        "regex": "(?i)^форм[а-я]?\\sоцен[а-я]+(\\sсоблюден[а-я]+)?",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Control",
+        "attribute":"ctrl_evaluation_form"        
+      }
+    },
+    {
+      "name": "Вид государственного контроля (надзора) или разрешительной деятельности",
+      "document": {
+        "regex": "(?i)^вид\\s*государственного\\s*контроля...+$",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":[
+        {
+        "input":"value",
+        "link":"/references/levels/title",
+        "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Control",
+        "attribute":"ctrl_control_type"
+      }
+    },
+    {
+      "name": "Орган, ответственный за внесение сведений",
+      "document":{
+        "regex": "(?i)^орган\\S*\\s*ответственный\\s*за\\s*внесение\\s*сведений$",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":
+      [
+        {
+        "input":"value",
+        "link":"/references/organizations/title",
+        "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Control",
+        "attribute":"ctrl_data_alter_org"
+      }
+    },
+    {
+      "name": "Орган, проверяющий соответствие обязательному требованию",
+      "document":{
+        "regex": "(?i)^орган\\S*\\s*проверяющий\\s*соответствие...+$",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "input":"value",
+          "link":"/references/organizations/title",
+          "output":"id"
+        }
+      ],        
+      "database": {
+        "orm":"Control",
+        "attribute":"ctrl_verifying_org"
+      }
+    },
+    {
+      "name": "Проверочный вопрос",
+      "document":{
+        "regex": "(?i)^проверочн[а-я]+\\s*вопрос[а-я]*$",
+        "optional": true,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Control",
+        "attribute": "ctrl_verifying_qiestion"
+      }
+    },
+    {
+      "name": "Вид акта",
+      "document":{
+        "regex": "(?i)^вид\\s*акт[а-я]+$",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":[
+        {
+          "input":"value",
+          "link":"/references/acts/title",
+          "output":"id"
+        }
+      ],
+      "database":{
+        "orm":"Compliance",
+        "attribute":"cmpl_act_type"
+      }
+    },
+    {
+      "name": "Название акта",
+      "document":{
+        "regex": "(?i)^назван[а-я]+\\s*акт[а-я]+$",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Compliance",
+        "attribute":"cmpl_act_title"
+      }
+    },
+    {
+      "name": "Текст акта",
+      "document":{
+        "regex": "(?i)^текст([а-я]+)?\\s*акт([а-я]+)?$",
+        "optional": false,
+        "format": [
+          {
+            "formatter": "TextClear",
+            "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+          },
+          {
+            "formatter": "TextTrim",
+            "options": ["\\s{2,}", " "]
+          }
+        ]
+      },
+      "mapping":null,
+      "database":{
+        "orm":"Compliance",
+        "attribute":"cmpl_act_text"
+      }
+    },
+
+
+
+
+    
+    {
+      "name": "Утвердивший орган",
+      "regex": "(?i)^утвердивший\\s*орган$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Дата утверждения акта",
+      "regex": "(?i)^дата\\s*утверждения\\s*акта$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "DateInput",
+          "options": [
+            "(?P<date_fmt>\\d{2,4}.\\d{2,4}.\\d{2,4})|(?P<str_fmt>[А-я]+...+)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Номер акта",
+      "regex": "(?i)^номер\\s*акта$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "ID акта",
+      "regex": "(?i)^id\\s*акта$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Гиперссылка на текст акта (www.pravo.gov.ru)",
+      "regex": "(?i)^гиперссылка\\s*на\\s*текст\\s*акта...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Наименование акта, устанавливающего ответственность за несоблюдение обязательного требования",
+      "regex": "(?i)^наименование\\s*акта\\S*\\s*устанавливающего\\s*ответственность\\s*за\\s*несоблюдение...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Статья акта, устанавливающая ответственность за несоблюдение обязательного требования",
+      "regex": "(?i)^статья акта\\S*\\s*устанавливающая\\s*ответственность\\s*за\\s*несоблюдение...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Часть статьи акта, устанавливающей ответственность за несоблюдение обязательного требования",
+      "regex": "(?i)^часть\\s*статьи\\s*акта\\S*\\s*устанавливающей\\s*ответственность...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Текст структурной единицы акта, устанавливающей ответственность за несоблюдение обязательного требования",
+      "regex": "(?i)^текст\\s*структурной\\s*единицы\\s*акта\\S*\\s*устанавливающей\\s*ответственность\\s+за\\s+несоблюдение\\s+...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Органы власти, привлекающие к ответственности за несоблюдение обязательного требования",
+      "regex": "(?i)^органы\\s*власти\\S*\\s*привлекающие\\s*к\\s*ответственности...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Субъект ответственности за несоблюдение обязательного требования",
+      "regex": "(?i)^субъект([а-я]+)?\\s*ответственности...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Ответственность для физического лица",
+      "regex": "(?i)^ответственность\\s*для\\s*физического\\s*лица$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Размер/длительность санкции для физического лица",
+      "regex": "(?i)^размер\\/длительность\\s*санкции\\s*для\\s*физического\\s*лица$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Комментарии для физического лица",
+      "regex": "(?i)^комментарии\\s*для\\s*физического\\s*лица$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Ответственность для индивидуального предпринимателя",
+      "regex": "(?i)^ответственность\\s*для\\s*индивидуального\\s*предпринимателя$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Размер/длительность санкции для индивидуального предпринимателя",
+      "regex": "(?i)^размер\\/длительность\\s*санкции\\s*для\\s*индивидуального\\s*предпринимателя$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Комментарии для индивидуального предпринимателя",
+      "regex": "(?i)^комментарии\\s*для\\s*индивидуального\\s*предпринимателя$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Ответственность для юридического лица",
+      "regex": "(?i)^ответственность\\s*для\\s*юридического\\s*лица$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Размер/длительность санкции для юридического лица",
+      "regex": "(?i)^размер\\/длительность\\s*санкции\\s*для\\s*юридического\\s*лица$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Комментарии для юридического лица",
+      "regex": "(?i)^комментарии\\s*для\\s*юридического\\s*лица$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Ответственность для должностного лица",
+      "regex": "(?i)^ответственность\\s*для\\s*должностного\\s*лица$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Размер/длительность санкции для должностного лица",
+      "regex": "(?i)^размер\\/длительность\\s*санкции\\s*для\\s*должностного\\s*лица$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Комментарии для должностного лица",
+      "regex": "(?i)^комментарии\\s*для\\s*должностного\\s*лица$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Сферы общественных отношений, затрагиваемые обязательным требованием",
+      "regex": "(?i)^сферы\\s*общественных\\s*отношений...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Виды экономической деятельности лиц, обязанных соблюдать обязательное требование",
+      "regex": "(?i)^виды\\s*экономической\\s*деятельности...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Оценка затрат лиц, в отношении которых устанавливается обязательное требование, на его исполнение, а также информация об уровне причиненного охраняемым законом ценностям вреда (ущерба)",
+      "regex": "(?i)^оценка\\s*затрат\\s*лиц...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Перечень документов (сведений), подтверждающих соответствие субъекта (объекта) обязательному требованию",
+      "regex": "(?i)^перечень\\s*документов\\s*\\(сведений\\)\\S*\\s*подтверждающих\\s*соответствие...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Орган, осуществляющий выдачу документов или предоставление сведений, подтверждающих соответствие субъекта (объекта) обязательному требованию",
+      "regex": "(?i)орган\\S*\\s*осуществляющий\\s*выдачу\\s*документов\\s*или\\s*предоставление\\s*сведений...+$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Иные органы, осуществляющие выдачу документов или предоставление сведений, подтверждающих соответствие субъекта (объекта) обязательному требованию",
+      "regex": "(?i)иные\\s*органы\\S*\\s*осуществляющие\\s*выдачу\\s*документов\\s*или\\s*предоставление\\s*сведений...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Гиперссылки на утвержденные проверочные листы (при наличии)",
+      "regex": "(?i)гиперссылки\\s*на\\s*утвержденные\\s*проверочные\\s*листы...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Гиперссылки на руководства по соблюдению обязательных требований (при наличии)",
+      "regex": "(?i)гиперссылки\\s*на\\s*руководства\\s*по\\s*соблюдению...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "Гиперссылки на доклады о достижении целей введения обязательных требований (при наличии)",
+      "regex": "(?i)гиперссылки\\s*на\\s*доклады...+$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        },
+        {
+          "formatter": "TextSplit",
+          "options": ["\\s*;\\s*|\\s*,\\s*|\\s*/.s*|\n"]
+        }
+      ]
+    },
+    {
+      "name": "GUID",
+      "regex": "(?i)^guid.*$",
+      "optional": false,
+      "format": [
+        {
+          "formatter": "TextClear",
+          "options": ["[\\[\\]\"\\'\\^\\*\\$#/@<>{}`+=~|!?]", " "]
+        },
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    },
+    {
+      "name": "Ссылка",
+      "regex": "(?i)^ссылка.*$",
+      "optional": true,
+      "format": [
+        {
+          "formatter": "TextTrim",
+          "options": ["\\s{2,}", " "]
+        }
+      ]
+    }
+  ]
+}
