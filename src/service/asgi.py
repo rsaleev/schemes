@@ -8,8 +8,7 @@ from fastapi.openapi.docs import (
 
 from src.config.service import Settings
 
-from src.service.routes.schemes import router as r_schemes
-from src.service.routes.validation import router as r_validation
+from service.routes.workbooks import router as r_documents
 
 settings = Settings()
 
@@ -23,7 +22,7 @@ app.description = settings.fastapi_app_title
 
 app.state.static_folder = "./src/service/static"
 app.state.temp_folder = "./src/service/temp"
-
+app.state.schemes_folder = "./data"
 
 app.mount("/static", StaticFiles(directory=app.state.static_folder), name='static')
 app.mount("/tmp",StaticFiles(directory=app.state.temp_folder), name='temp')
@@ -37,18 +36,17 @@ app.add_middleware(
     allow_headers=settings.cors_allow_headers,
 )
 
-app.include_router(r_schemes)
-app.include_router(r_validation)
+app.include_router(r_documents)
 
 
-@app.get("/health", include_in_schema=False)
+@app.get("/api/health", include_in_schema=False)
 async def get_status():
    return 1
 
-@app.get("/docs", include_in_schema=False)
+@app.get("/api/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
+        openapi_url="/api/openapi.json",
         title=app.title + " - Swagger UI",
         oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
         swagger_js_url="static/swagger-ui-bundle.js",

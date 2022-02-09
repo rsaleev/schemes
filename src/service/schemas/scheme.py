@@ -6,20 +6,9 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from src.api.schemes import Workbook
+from src.api.scheme import *
 
-
-
-class SchemeDataType(str, Enum):
-    """SchemeDataType 
-
-    Описание структуры документа или модели в БД
-   
-    """
-    documents = "documents"
-    database = "database"
-
-class SchemeHeaderElement(str, Enum):
+class SchemeElement(str, Enum):
     """SchemeHeaderElement
     Описание элементов в заголовке структуру документа или модели в БД
 
@@ -27,12 +16,19 @@ class SchemeHeaderElement(str, Enum):
     column  = "column"
     attribute = "attribute"
 
-class SchemeColumnRequest(BaseModel):
+class SchemeColumnRequest(Column):
+    pass
 
-    name:str
-    index:Optional[int]
-    regex:Optional[str]
-    optional:Optional[bool]  
+    class Meta:
+        arbitrary_type_allowed = True
+
+class SchemeHeaderRequest(Header):
+    pass
+
+    class Meta:
+        arbitrary_type_allowed = True
+
+    
     
 class SchemeResponse(BaseModel):
     data:Optional[Union[Workbook, List[Workbook]]]
