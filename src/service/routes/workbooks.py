@@ -1,14 +1,16 @@
-from typing import List
+from typing import List, Optional, Union, Dict
+
+from pydantic import BaseModel
 
 from fastapi.routing import APIRouter
 from fastapi import HTTPException, status, Query
 
-from src.api.scheme.workbook import Workbook
+from src.api.scheme.workbook import *
 from src.api import exceptions
 
-from src.service.schemas import scheme
-
 from src.api.scheme import WorkbookSchemes
+from src.service.schema.scheme import * 
+from src.service.schema.validation import *
 
 router = APIRouter(prefix='/documents', tags=['Схемы документов/excel'])
 
@@ -30,7 +32,7 @@ async def fetch_all():
     description='Получить схему в соответствие с типом источника и названием',
     status_code=status.HTTP_200_OK)
 async def fetch_scheme(schema_name: str):
-    """fetch_scheme 
+    """
 
     Получение схемы по типу источника и имени
 
@@ -55,7 +57,7 @@ async def fetch_scheme(schema_name: str):
             description='Обновить элемент в схеме документа по названию',
             status_code=200)
 async def modify_scheme_element(schema_name: str,
-                                scheme_request: scheme.SchemeColumnRequest):
+                                scheme_request: SchemeColumnRequest):
     """modify_scheme 
 
     Args:
@@ -87,10 +89,9 @@ async def modify_scheme_element(schema_name: str,
 @router.delete('/{schema_name}/{element_type}/{element_name}',
                description='Удалить элемент в схеме документа по названию',
                status_code=200,
-               response_model=scheme.SchemeResponse)
-
-def delete_scheme_element(element_type: scheme.SchemeElement,
-                          schema_name: str, element_name: str):
+               response_model=SchemeResponse)
+def delete_scheme_element(element_type: SchemeElementType, schema_name: str,
+                          element_name: str):
     """
     
     Удаление элемента из массива 
@@ -120,32 +121,31 @@ def delete_scheme_element(element_type: scheme.SchemeElement,
             try:
                 data = scheme_match.delete_column(element_name)
             except (AttributeError, ValueError) as e:
-                return scheme.SchemeResponse(error=str(e))
+                return SchemeResponse(error=str(e))
             else:
                 WorkbookSchemes.write(scheme_match.name, data.dict())
                 return
-        elif element_type.attribute:
+        elif element_type.header:
             try:
                 data = scheme_match.delete_attribute(element_name)
             except (AttributeError, ValueError) as e:
-                return scheme.SchemeResponse(error=str(e))
+                return SchemeResponse(error=str(e))
             else:
                 if data:
                     WorkbookSchemes.write(scheme_match.name, data.dict())
                     return
-        
+
+
 @router.post('/{scheme_name}',
              description='Создать новую схему',
              status_code=201,
-             response_model=scheme.SchemeResponse)
-def add_new_scheme(scheme_name: str,
-                   data: Workbook):
+             response_model=SchemeResponse)
+def add_new_scheme(scheme_name: str, data: Workbook):
     try:
         WorkbookSchemes.update(scheme_name, data.dict())
     except:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='Ошибка сохранения данных')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail='Ошибка сохранения данных')
     else:
         return
 
@@ -161,18 +161,17 @@ def validate_document_schema(headers: list):
         if r[0]:
             return r[0].validate_columns(r[0].name, r[1], r[2], r[3])
 
-@router.get('/{source}', status_code=status.HTTP_200_OK, response_model=scheme.ValidationResponse, response_model_exclude_unset=True)
+
+@router.get('/{source}',
+            status_code=status.HTTP_200_OK,
+            response_model=ValidationResponse,
+            response_model_exclude_unset=True)
 async def validate_schema(headers: List[str] = Query(...)):
     if not headers:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Не переданы параметы запроса')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='Не переданы параметы запроса')
     try:
         output = validate_document_schema(headers)
         return scheme.ValidationResponse(data=output)
     except Exception as e:
         return scheme.ValidationResponse(error=str(e))
-
-                
-                
-                
