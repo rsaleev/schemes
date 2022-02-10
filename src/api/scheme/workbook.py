@@ -39,6 +39,8 @@ class Database(BaseModel):
     """
     orm: str
     attribute: str
+    additional_param:Optional[str]
+    additional_value:Optional[str]
 
 
 class Column(BaseModel):

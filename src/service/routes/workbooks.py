@@ -9,7 +9,8 @@ from src.api.scheme.workbook import *
 from src.api import exceptions
 
 from src.api.scheme import WorkbookSchemes
-from src.service.schema.scheme import * 
+from src.service.schema.scheme import *
+from src.service.schema.scheme import SchemeColumnRequest 
 from src.service.schema.validation import *
 
 router = APIRouter(prefix='/documents', tags=['Схемы документов/excel'])
@@ -150,19 +151,32 @@ def add_new_scheme(scheme_name: str, data: Workbook):
         return
 
 
-def validate_document_schema(headers: list):
+def check_headers(headers: list):
+    """
+    Сверка списка заголовков столбцов по всем схемам
+
+    Args:
+        headers (list): наименования столбцов
+
+    Raises:
+        exceptions.SchemeNotLoaded: ошибка загрузки схемы
+        exceptions.SchemeNotFound: схема не найдена после проверки
+
+    Returns:
+        [type]: [description]
+    """
+
     schemes = WorkbookSchemes.read()
     if not schemes:
         raise exceptions.SchemeNotLoaded("Ошибка загрузки данных")
     result = [s.verify_columns(tuple(headers)) for s in schemes]
-    if not result:
-        raise exceptions.SchemeNotFound("Схема не найдена")
     for r in result:
         if r[0]:
             return r[0].validate_columns(r[0].name, r[1], r[2], r[3])
+    raise exceptions.SchemeNotFound("Схема не найдена")
 
 
-@router.get('/{source}',
+@router.get('/validation/documents',
             status_code=status.HTTP_200_OK,
             response_model=ValidationResponse,
             response_model_exclude_unset=True)
@@ -171,7 +185,7 @@ async def validate_schema(headers: List[str] = Query(...)):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail='Не переданы параметы запроса')
     try:
-        output = validate_document_schema(headers)
-        return scheme.ValidationResponse(data=output)
+        output = check_headers(headers)
+        return ValidationResponse(data=output)
     except Exception as e:
-        return scheme.ValidationResponse(error=str(e))
+        return ValidationResponse(error=str(e))
