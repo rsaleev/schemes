@@ -8,7 +8,7 @@ from fastapi.openapi.docs import (
 
 from src.config.service import Settings
 
-from service.routes.workbooks import router as r_documents
+from src.service.routes.workbooks import router as r_documents
 
 settings = Settings()
 
