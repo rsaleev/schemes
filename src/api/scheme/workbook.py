@@ -22,14 +22,17 @@ class Document(BaseModel):
     Описание объекта в документе
     """
     regex: str
-    index: int = 0
+    index: int = 0 # значение по умолчанию, до момента расчета текущего индекса
     optional: bool
     format: Optional[List[Format]]
 
 
 class Mapping(BaseModel):
+    """
+    Описание соответствия значение <-> код
+    """
     input: str
-    path: str
+    link: str
     output: str
 
 
@@ -57,19 +60,6 @@ class HeaderAttribute(BaseModel):
     name: str
     optional: bool
 
-
-class Header(BaseModel):
-    """ 
-    Заголовок документа, включайщий в себя атрибуты, хранящиейся  в "ленивом" колоночном формате, 
-    а также столбцы, составляющие структуру документа
-
-    Пример:
-        объединенные ячейки с наименованием документа, датой и т.п.
-
-    """
-    attributes: List[HeaderAttribute]
-
-
 class Workbook(BaseModel):
     """ 
     Корневой объект описывающий документ колоночного типа (Excel)
@@ -78,7 +68,7 @@ class Workbook(BaseModel):
     title: str
     name: str
     sheet: str
-    header: Optional[Header]
+    header: Optional[List[HeaderAttribute]]
     columns: List[Column]
 
 
@@ -141,13 +131,13 @@ class Workbook(BaseModel):
         """
         if self.header:
             try:
-                idx, _ = next((idx, h) for idx, h in enumerate(self.header.attributes)
+                idx, _ = next((idx, h) for idx, h in enumerate(self.header)
                             if h.name == name)
 
             except StopIteration:
                 raise ValueError('Не найдена запись для удаления')
             else:
-                self.header.attributes.pop(idx)
+                self.header.pop(idx)
             return self
 
 
@@ -157,7 +147,6 @@ class Workbook(BaseModel):
         self, source: Tuple[Any, ...]
     ) -> Tuple[Union['Workbook', None], List[Any], List[Any], List[Any]]:
         """
-        verify_columns 
 
         Проверка наличия в заголовке наименований столбцов
 
@@ -171,10 +160,10 @@ class Workbook(BaseModel):
         matched = []
         for idx, value in enumerate(source, start=1):
             # поиск по совпадению регулярного значения и исходного заголовка. Возвращает None если не найдено значение
-            match = next((c for c in self.columns
-                          if re.match(c.document.regex, fr"{value}")), None)
+            match:Union[Column, None] = next((c for c in self.columns
+                          if re.match(c.document.regex, value)), None)
             if match:
-                match.index = idx
+                match.document.index = idx 
                 matched.append(match)
         missing_required = [
             c.name for c in self.columns
@@ -220,9 +209,6 @@ class Workbook(BaseModel):
                 raise ValueError(
                     f'Дублирование столбцов, документ не отвечает требованиям схемы. {duplicates}'
                 )
-            # if unmatched:
-            #     raise ValueError(
-            #         f'Отсутствуют обязательные столбцы {";".join(unmatched)}')
         else:
             raise ValueError('Схема документа не найдена')
         output = {
@@ -252,4 +238,4 @@ class WorkbookSchemes(SchemeHandler):
     def write(cls, scheme: str, data: dict) -> None:
         return super().dump(scheme, data, ensure_exists=False)
 
-__all__ =['WorkbookSchemes', 'Workbook', 'Column', 'Header']
+__all__ =['WorkbookSchemes', 'Workbook', 'Column', 'HeaderAttribute']
