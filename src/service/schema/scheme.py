@@ -2,8 +2,9 @@ from typing import Optional, Union, List
 from pydantic import BaseModel
 
 from enum import Enum
+from src.api.scheme.workbook import HeaderAttribute
 
-from src.api.scheme import * 
+from src.api.scheme.workbook import * 
 
 
 
@@ -18,7 +19,7 @@ class SchemeColumnRequest(Column):
     class Meta:
         arbitrary_type_allowed = True
 
-class SchemeHeaderRequest(Header):
+class SchemeHeaderRequest(HeaderAttribute):
     pass
 
     class Meta:
