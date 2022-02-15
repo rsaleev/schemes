@@ -43,7 +43,7 @@ class Database(BaseModel):
     orm: str
     attribute: str
     additional_param:Optional[str]
-    additional_value:Optional[str]
+    additional_attribute:Optional[str]
 
 
 class Column(BaseModel):
