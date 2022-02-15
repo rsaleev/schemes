@@ -62,7 +62,7 @@ def test_erot_match(mock_test_env):
     erot_scheme = next(scheme for scheme in schemes if scheme.name =='erot')
     assert erot_scheme.name == 'erot'
     result_verified = erot_scheme.verify_columns(tuple(headers))
-    
+    assert len(result_verified) == 4
     assert result_verified[0] 
     assert result_verified[0].name == 'erot'
     assert result_verified[1]
