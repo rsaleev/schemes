@@ -29,4 +29,4 @@ class SchemeResponse(BaseModel):
     data:Optional[Union[Workbook, List[Workbook]]]
     error:Optional[str]
 
-__all__ = ['SchemeElementType', 'SchemeHeaderRequest', 'SchemeResponse']
+__all__ = ['SchemeElementType', 'SchemeHeaderRequest', 'SchemeResponse', 'SchemeColumnRequest']

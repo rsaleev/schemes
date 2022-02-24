@@ -33,7 +33,9 @@
       "mapping":null,
       "database":{
         "orm":"Base",
-        "attribute":"req_id"
+        "params":{
+          "req_id":"value"
+        }
       }
     },
     {
@@ -55,7 +57,9 @@
       "mapping":null,
       "database":{
         "orm":"Base",
-        "attribute":"req_content"
+        "params":{
+          "req_content":"value"
+        }
       }
     },
     {
@@ -76,14 +80,17 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
-          "link":"/references/publish/title",
+          "link":"/references/publications/title",
           "output":"code"
         }
       ],
       "database":{
         "orm":"Description",
-        "attribute":"desc_publication_status"
+        "params":{
+          "desc_publication_status":"value"
+        }
       }
     },
     {
@@ -111,7 +118,9 @@
       "mapping":null,
       "database": {
         "orm":"Description",
-        "attribute":"desc_publication_date"
+        "params":{
+          "desc_publication_date":"value"
+        }
       }
     },
     {
@@ -132,6 +141,7 @@
       },
       "mapping": [
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/working/title",
           "output":"code"
@@ -139,7 +149,9 @@
       ],
       "database":{
         "orm":"Description",
-        "attribute":"desc_work_status"
+        "params":{
+          "desc_work_status":"value"
+        }
       }
     },
     {
@@ -160,6 +172,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/regulation/title",
           "output":"code"
@@ -167,7 +180,9 @@
       ],
       "database":{
         "orm":"Description",
-        "attribute":"desc_regulation_level"
+        "params":{
+          "desc_regulation_level":"value"
+        }
       }
     }, 
     {
@@ -193,7 +208,9 @@
       "mapping":null,
       "database":{
         "orm":"Description",
-        "attribute":"desc_act_requisites"
+        "params":{
+          "desc_act_requisites":"value"
+        }
       }
     },
     {
@@ -215,7 +232,9 @@
       "mapping":null,
       "database":{
         "orm":"Description",
-        "attribute":"desc_act_text"
+        "params":{
+          "desc_act_text":"value"
+        }
       }
     },
     {
@@ -243,7 +262,9 @@
       "mapping":null,
       "database":{
         "orm":"Description",
-        "attribute":"desc_valid_to"
+        "params":{
+          "desc_valid_to":"value"
+        }
       }
     },
     {
@@ -264,6 +285,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/validity/title",
           "output":"code"
@@ -271,7 +293,9 @@
       ],
       "database":{
         "orm":"Description",
-        "attribute":"desc_validity_status"
+        "params":{
+          "desc_validity_status":"value"
+        }
       }
     },
     {
@@ -293,7 +317,9 @@
       "mapping":null,
       "database":{
         "orm":"Control",
-        "attribute":"ctrl_objects"
+        "params":{
+          "ctrl_objects":"value"
+        }
       }
     },
     {
@@ -312,12 +338,13 @@
           },
           {
             "formatter": "TextSplit",
-            "options": [";"]
+            "options": ["\\s*;\\s*|\\s*/.s*|\n"]
           }
         ]
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/subjects/title",
           "output":"code"
@@ -325,7 +352,10 @@
       ],
       "database":{
         "orm":"Control",
-        "attribute":"ctrl_subjects_categories"
+        "params":
+        {
+          "ctrl_subjects_categories":"value"
+        }
       }
     },
     {
@@ -344,12 +374,13 @@
           },
           {
             "formatter": "TextSplit",
-            "options": [";"]
+            "options": ["\\s*;\\s*|\\s*/.s*|\n"]
           }
         ]
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/subjects/title",
           "output":"code"
@@ -357,7 +388,9 @@
       ],
       "database":{
         "orm":"Control",
-        "attribute":"ctrl_subjects_categories_ext"
+        "params":{
+          "ctrl_subjects_categories_ext":"value"
+        }
       }
     },
     {
@@ -378,6 +411,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/evaluation/title",
           "output":"code"
@@ -385,7 +419,9 @@
       ],
       "database":{
         "orm":"Control",
-        "attribute":"ctrl_evaluation_form"        
+        "params":{
+          "ctrl_evaluation_form":"value"
+        }        
       }
     },
     {
@@ -406,14 +442,17 @@
       },
       "mapping":[
         {
-        "input":"value",
-        "link":"/references/control/title",
-        "output":"code"
+          "source":"catalogues",
+          "input":"value",
+          "link":"/references/control/title",
+          "output":"code"
         }
       ],
       "database":{
         "orm":"Control",
-        "attribute":"ctrl_control_type"
+        "params":{
+          "ctrl_control_type":"value"
+        }
       }
     },
     {
@@ -435,14 +474,17 @@
       "mapping":
       [
         {
-        "input":"value",
-        "link":"/references/organizations/title",
-        "output":"code"
+          "source":"catalogues",
+          "input":"value",
+          "link":"/references/organizations/title",
+          "output":"code"
         }
       ],
       "database":{
         "orm":"Control",
-        "attribute":"ctrl_data_alter_org"
+        "params":{
+          "ctrl_data_alter_org":"value"
+        }
       }
     },
     {
@@ -463,6 +505,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/organizations/title",
           "output":"code"
@@ -470,7 +513,9 @@
       ],        
       "database": {
         "orm":"Control",
-        "attribute":"ctrl_verifying_org"
+        "params":{
+          "ctrl_verifying_org":"value"
+        }
       }
     },
     {
@@ -492,7 +537,9 @@
       "mapping":null,
       "database":{
         "orm":"Control",
-        "attribute": "ctrl_verifying_question"
+        "params": {
+          "ctrl_verifying_question":"value"
+        }
       }
     },
     {
@@ -513,6 +560,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/acts/title",
           "output":"code"
@@ -520,7 +568,9 @@
       ],
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_type"
+        "params":{
+          "cmpl_act_type":"value"
+        }
       }
     },
     {
@@ -542,7 +592,9 @@
       "mapping":null,
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_title"
+        "params":{
+          "cmpl_act_title":"value"
+        }
       }
     },
     {
@@ -564,7 +616,9 @@
       "mapping":null,
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_text"
+        "params":{
+          "cmpl_act_text":"value"
+        }
       }
     },
     {
@@ -586,7 +640,9 @@
       "mapping":null,
       "database":{
         "orm": "Compliance",
-        "attribute":"cmpl_act_approved_org"
+        "params":{
+          "cmpl_act_approved_org":"value"
+        }
       }
     },
     {
@@ -614,7 +670,9 @@
       "mapping":null,
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_approved_date"
+        "params":{
+          "cmpl_act_approved_date":"value"
+        }
       }
     },
     {
@@ -636,7 +694,9 @@
       "mapping":null,
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_number"
+        "params":{
+          "cmpl_act_number":"value"
+        }
       }
     },
     {
@@ -658,7 +718,9 @@
       "mapping":null,
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_id"
+        "params":{
+          "cmpl_act_id":"value"
+        }
       }
     },
     {
@@ -676,7 +738,9 @@
       "mapping":null,
       "database":{
         "orm":"Compliance",
-        "attribute":"cmpl_act_link"
+        "params":{
+          "cmpl_act_link":"value"
+        }
       }
     },
     {
@@ -698,7 +762,9 @@
       "mapping":null,
       "database":{
         "orm":"Liability",
-        "attribute":"lblt_act_title"
+        "params":{
+          "lblt_act_title":"value"
+        }
       }
     },
     {
@@ -720,7 +786,9 @@
       "mapping":null,
       "database":{
         "orm":"Liability",
-        "attribute":"lblt_act_article"
+        "params":{
+          "lblt_act_article":"value"
+        }
       }
     },
     {
@@ -742,7 +810,9 @@
       "mapping":null,
       "database":{
         "orm":"Liability",
-        "attribute":"lblt_act_clause"
+        "params":{
+          "lblt_act_clause":"value"
+        }
       }
     },
     {
@@ -764,7 +834,9 @@
       "mapping":null,
       "database":{
         "orm":"Liability",
-        "attribute":"lblt_act_text"
+        "params":{
+          "lblt_act_text":"value"
+        }
       }
     },
     {
@@ -787,10 +859,19 @@
           }
         ]
       },
-      "mapping":null,
+      "mapping":[
+        {
+          "source":"catalogues",
+          "input":"value",
+          "link":"/references/oranizations/title",
+          "output":"code"
+        }
+      ],
       "database":{
         "orm":"Liability",
-        "attribute":"lblt_organization"
+        "params":{
+          "lblt_organization":"value"
+        }
       }
     },
     {
@@ -813,10 +894,20 @@
           }
         ]
       },
-      "mapping":null,
+      "mapping":
+      [
+        {
+          "source":"catalogues",
+          "input":"value",
+          "link":"/references/subjects/title",
+          "output":"code"
+        }
+      ],
       "database":{
         "orm":"Liability",
-        "attribute":"lblt_subjects"
+        "params":{
+          "lblt_subjects":"value"
+        }
       }
     },
     {
@@ -841,16 +932,18 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"name",
           "link":"/references/subjects/title",
           "output":"code"
         }
       ],
       "database":{
-        "orm":"PhysicalSanction",
-        "attribute":"snct_title",
-        "additional_param":"name",
-        "additional_attribute":"snct_subject"
+        "orm":"Sanction",
+        "params":{
+          "snct_title":"value",
+          "snct_subject":"name"
+        }
       }
     },
     {
@@ -875,9 +968,23 @@
       },
       "mapping":null,
       "database":{
-        "orm":"PhysicalSanction",
-        "attribute":"snct_content"
-      }
+        "orm":"Sanction",
+        "params":{
+          "snct_content":"value"
+        },
+        "format":[
+          {
+            "attribute":"snct_content",
+            "formatter": "TextParse",
+            "options":["^(?P<min>от\\s*(?P<min_val>\\d+))|\\s*(?P<max>до\\s*(?P<max_val>\\d+))|\\s*(?P<measure>...+)$"],
+            "output":{
+              "snct_min":"min_val",
+              "snct_max":"max_val",
+              "snct_measure":"measure"
+            }
+          }
+        ]
+      }  
     },
     {
       "name": "Комментарии для физического лица",
@@ -899,10 +1006,12 @@
           }
         ]
       },
-    "mapping":null,
-    "database":{
-      "orm":"PhysicalSanction",
-      "attribute":"snct_comments"
+      "mapping":null,
+      "database":{
+        "orm":"Sanction",
+        "params":{
+          "snct_comments":"value"
+          }
       }
     }, 
     {
@@ -927,16 +1036,18 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"name",
           "link":"/references/subjects/title",
           "output":"code"
         }
       ],
       "database":{
-        "orm":"SelfemployedSanction",
-        "attribute":"snct_title",
-        "additional_param":"name",
-        "additional_attribute":"snct_subject"
+        "orm":"Sanction",
+        "params":{
+          "snct_title":"value",
+          "snct_subject":"name"
+        }
       }
     },
     {
@@ -961,8 +1072,10 @@
       },
       "mapping":null,
       "database":{
-        "orm":"SelfemployedSanction",
-        "attribute":"snct_content"
+        "orm":"Sanction",
+        "params":{
+          "snct_content":"value"
+        }
       }
     },
     {
@@ -987,8 +1100,10 @@
       },
       "mapping":null,
       "database":{
-        "orm":"SelfemployedSanction",
-        "attribute":"snct_comments"
+        "orm":"Sanction",
+        "params":{
+          "snct_comments":"value"
+        }
       }
     },
     {
@@ -1013,16 +1128,18 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"name",
           "link":"/references/subjects/title",
           "output":"code"
         }
       ],
       "database":{
-        "orm":"JuristicSanction",
-        "attribute":"snct_title",
-        "additional_param":"name",
-        "additional_attribute":"snct_subject"
+        "orm":"Sanction",
+        "params":{
+          "snct_title":"value",
+          "snct_subject":"name"
+        }
       }
     },
     {
@@ -1047,8 +1164,10 @@
       },
       "mapping":null,
       "database":{
-        "orm":"JuristicSanction",
-        "attribute":"snct_content"
+        "orm":"Sanction",
+        "params":{
+          "snct_content":"value"
+        }
       }
     },
     {
@@ -1073,8 +1192,10 @@
       },
       "mapping":null,
       "database":{
-        "orm":"JuristicSanction",
-        "attribute":"snct_comments"
+        "orm":"Sanction",
+        "params":{
+          "snct_comments":"value"
+        }
       }
     },
     {
@@ -1099,16 +1220,18 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"name",
           "link":"/references/subjects/title",
           "output":"code"
         }
       ],
       "database":{
-        "orm":"ExecutiveSanction",
-        "attribute":"snct_title",
-        "additional_param":"name",
-        "additional_attribute":"snct_subject"
+        "orm":"Sanction",
+        "params":{
+          "snct_title":"value",
+          "snct_subject":"name"
+        }
       }
     },
     {
@@ -1133,8 +1256,10 @@
       },
       "mapping":null,
       "database":{
-        "orm":"ExecutiveSanction",
-        "attribute":"snct_content"
+        "orm":"Sanction",
+        "params":{
+          "snct_content":"value"
+        }
       }
     },
     {
@@ -1159,8 +1284,10 @@
       },
       "mapping":null,
       "database":{
-        "orm":"ExecutiveSanction",
-        "attribute":"snct_comments"
+        "orm":"Sanction",
+        "params":{
+          "snct_comments":"value"
+        }
       }
     },
     {
@@ -1186,7 +1313,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_public_relations"
+        "params":{
+          "attr_public_relations":"value"
+        }
       }
     },
     {
@@ -1212,7 +1341,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_economic_activities"
+        "params":{
+          "attr_economic_activities":"value"
+        }
       }
     },
     {
@@ -1234,7 +1365,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_cost_estimate"
+        "params":{
+          "attr_cost_estimate":"value"
+        }
       }
     },
     {
@@ -1260,7 +1393,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_documents_list"
+        "params":{
+          "attr_documents_list":"value"
+        }
       }
     },
     {
@@ -1281,6 +1416,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/organizations/title",
           "output":"code"
@@ -1288,7 +1424,9 @@
       ],
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_org_data_provision"
+        "params":{
+          "attr_org_data_provision":"value"
+        }
       }
     },
     {
@@ -1309,6 +1447,7 @@
       },
       "mapping":[
         {
+          "source":"catalogues",
           "input":"value",
           "link":"/references/organizations/title",
           "output":"code"
@@ -1316,7 +1455,9 @@
       ],
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_org_data_provision_ext"
+        "params":{
+          "attr_org_data_provision_ext":"value"
+        }
       }
     },
     {
@@ -1338,7 +1479,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_checklists_links"
+        "params":{
+          "attr_checklists_links":"value"
+        }
       }
     },
     {
@@ -1360,7 +1503,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_manuals_links"
+        "params":{
+          "attr_manuals_links":"value"
+        }
       }
     },
     {
@@ -1382,7 +1527,9 @@
       "mapping":null,
       "database":{
         "orm":"Attribute",
-        "attribute":"attr_reports_links"
+        "params":{
+          "attr_reports_links":"value"
+        }
       }
     },
     {
@@ -1404,7 +1551,9 @@
       "mapping":null,
       "database":{
         "orm":"Base",
-        "attribute":"req_guid"
+        "params":{
+          "req_guid":"value"
+        }
       }
     },
     {
@@ -1422,7 +1571,9 @@
       "mapping":null,
       "database":{
         "orm":"Base",
-        "attribute":"req_link"
+        "params":{
+          "req_link":"value"
+        }
       }
     }
   ]

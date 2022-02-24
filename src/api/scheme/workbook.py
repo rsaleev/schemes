@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Tuple, Any
+from typing import List, Optional, Union, Tuple, Any, Dict
 
 import re
 
@@ -15,7 +15,8 @@ class Format(BaseModel):
     """
     formatter: str
     options: List[str]
-
+    output:Optional[Dict[str, str]]
+    attribute:Optional[str]
 
 class Document(BaseModel):
     """
@@ -41,9 +42,8 @@ class Database(BaseModel):
     Описание соответствующей модели ORM и атрибута модели, в который передается значение объекта Column
     """
     orm: str
-    attribute: str
-    additional_param:Optional[str]
-    additional_attribute:Optional[str]
+    params:Optional[Dict[str, str]]
+    format:Optional[List[Format]]
 
 
 class Column(BaseModel):
@@ -52,8 +52,8 @@ class Column(BaseModel):
     """
     name: str
     document: Document
-    mapping: Optional[List[Mapping]]
-    database: Optional[Database]
+    mapping: Optional[List[Mapping]] = None
+    database: Optional[Database] = None
 
 
 class HeaderAttribute(BaseModel):

@@ -1,3 +1,4 @@
+from pydoc import describe
 from typing import List, Optional, Union, Dict
 
 from pydantic import BaseModel
@@ -8,9 +9,8 @@ from fastapi import HTTPException, status, Query
 from src.api.scheme.workbook import *
 from src.api import exceptions
 
-from src.api.scheme.workbook import WorkbookSchemes
+from src.api.scheme.workbook import WorkbookSchemes, Workbook
 from src.service.schema.scheme import *
-from src.service.schema.scheme import SchemeColumnRequest 
 from src.service.schema.validation import *
 
 router = APIRouter(prefix='/documents', tags=['Схемы документов/excel'])
@@ -150,6 +150,10 @@ def add_new_scheme(scheme_name: str, data: Workbook):
     else:
         return
 
+@router.get('/json', description='Получить JSON schema')
+def get_json_schema():
+    return Workbook.schema_json(ensure_ascii=False, indent=2)
+    
 
 
 @router.get('/validate',
